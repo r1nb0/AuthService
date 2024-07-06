@@ -4,6 +4,7 @@ import (
 	"AuthService/internal/config"
 	"AuthService/internal/controller"
 	"AuthService/internal/infra"
+	"AuthService/internal/middleware"
 	"AuthService/internal/usecase"
 	"AuthService/internal/utils"
 	"fmt"
@@ -30,15 +31,26 @@ func main() {
 
 	userRepo := infra.NewUserRepository(db)
 	jwtUtil := utils.NewJWTUtil(cfg)
+	authMiddleware := middleware.NewAuthMiddleware(jwtUtil)
 	authUsecase := usecase.NewAuthService(userRepo, jwtUtil, cfg)
+	userUsecase := usecase.NewUserService(userRepo)
 	authController := controller.NewAuthController(authUsecase)
+	userController := controller.NewUserController(userUsecase)
 
 	app := fiber.New()
 	api := app.Group("/api")
 	auth := api.Group("/auth")
+
 	{
 		auth.Post("/sign-in", authController.SignIn)
 		auth.Post("/sign-up", authController.SignUp)
+	}
+
+	users := api.Group("/users")
+	{
+		users.Get("/", userController.GetAll)
+		users.Get("/:id", userController.GetByID)
+		users.Put("/", userController.Update, authMiddleware.Authentication)
 	}
 
 	if err = app.Listen(fmt.Sprintf(":%s", cfg.Server.Port)); err != nil {
