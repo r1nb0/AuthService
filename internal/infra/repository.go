@@ -18,7 +18,7 @@ func NewUserRepository(db *sqlx.DB) domain.UserRepository {
 	}
 }
 
-func (r *userRepository) CreateUser(ctx context.Context, user *domain.UserDTO) (int, error) {
+func (r *userRepository) Create(ctx context.Context, user *domain.UserDTO) (int, error) {
 	var id int
 	stmt, err := r.db.PrepareContext(
 		ctx,
@@ -39,7 +39,7 @@ func (r *userRepository) CreateUser(ctx context.Context, user *domain.UserDTO) (
 	return id, nil
 }
 
-func (r *userRepository) GetUser(ctx context.Context, dto *domain.UserAuthDTO) (*domain.User, error) {
+func (r *userRepository) GetByAuthData(ctx context.Context, dto *domain.UserAuthDTO) (*domain.User, error) {
 	var user domain.User
 	stmt, err := r.db.PrepareContext(
 		ctx,
@@ -58,6 +58,60 @@ func (r *userRepository) GetUser(ctx context.Context, dto *domain.UserAuthDTO) (
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *userRepository) GetAll(ctx context.Context) ([]*domain.User, error) {
+	users := make([]*domain.User, 0)
+	stmt, err := r.db.PrepareContext(
+		ctx,
+		"SELECT * FROM users",
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer closeStatement(stmt, err)
+	rows, err := stmt.QueryContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var user domain.User
+		if err := rows.Scan(
+			&user.ID, &user.FirstName,
+			&user.LastName, &user.Nickname,
+			&user.Email, &user.Password,
+		); err != nil {
+			return nil, err
+		}
+		users = append(users, &user)
+	}
+	return users, nil
+}
+
+func (r *userRepository) GetByID(ctx context.Context, id int) (*domain.User, error) {
+	var user domain.User
+	stmt, err := r.db.PrepareContext(
+		ctx,
+		"SELECT * FROM users WHERE id = $1",
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer closeStatement(stmt, err)
+	row := stmt.QueryRowContext(ctx, id)
+	if err := row.Scan(
+		&user.ID, &user.FirstName,
+		&user.LastName, &user.Nickname,
+		&user.Email, &user.Password,
+	); err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+// Update TODO impl
+func (r *userRepository) Update(ctx context.Context, id int, dto *domain.UserDTO) error {
+	return nil
 }
 
 func closeStatement(stmt *sql.Stmt, err error) {
