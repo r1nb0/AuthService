@@ -7,10 +7,10 @@ import (
 )
 
 type AuthController struct {
-	uc usecase.UseCase
+	uc usecase.AuthUseCase
 }
 
-func NewAuthController(uc usecase.UseCase) *AuthController {
+func NewAuthController(uc usecase.AuthUseCase) *AuthController {
 	return &AuthController{
 		uc: uc,
 	}
@@ -21,14 +21,14 @@ func (c *AuthController) SignIn(ctx fiber.Ctx) error {
 	if err := ctx.Bind().JSON(&input); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
-			"error":   err,
+			"error":   err.Error(),
 		})
 	}
 	token, err := c.uc.SignIn(ctx.Context(), &input)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"success": false,
-			"error":   err,
+			"error":   err.Error(),
 		})
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -42,14 +42,14 @@ func (c *AuthController) SignUp(ctx fiber.Ctx) error {
 	if err := ctx.Bind().JSON(&input); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
-			"error":   err,
+			"error":   err.Error(),
 		})
 	}
 	id, err := c.uc.SignUp(ctx.Context(), &input)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"success": false,
-			"error":   err,
+			"error":   err.Error(),
 		})
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
