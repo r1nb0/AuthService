@@ -1,0 +1,15 @@
+server :
+    port : "8080"
+postgres :
+    host : "localhost"
+    port : "5432"
+    username : "r1nb0"
+    dbName : "auth"
+    sslMode : "disable"
+password :
+    minLength : "6"
+    maxLength : "64"
+    includeChars : true
+    includeDigits : true
+    includeUppercase : true
+    includeLowercase : true
