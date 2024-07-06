@@ -2,11 +2,11 @@ package main
 
 import (
 	"AuthService/internal/config"
-	"AuthService/internal/controller"
+	"AuthService/internal/controllers"
 	"AuthService/internal/infra"
 	"AuthService/internal/middleware"
 	"AuthService/internal/usecase"
-	"AuthService/internal/utils"
+	"AuthService/pkg/utils"
 	"fmt"
 	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"
@@ -19,14 +19,14 @@ func main() {
 		log.Fatalf("Error loading .env file : %v", err)
 	}
 
-	cfg, err := config.GetConfig("./configs", "config-prod", "yaml")
+	cfg, err := config.GetConfig()
 	if err != nil {
-		log.Fatalf("error of loading configs: %v", err)
+		log.Fatalf("error of loading configs: %s", err.Error())
 	}
 
 	db, err := infra.InitPostgres(cfg)
 	if err != nil {
-		log.Fatalf("error of initializing db: %v", err)
+		log.Fatalf("error of initializing db: %s", err.Error())
 	}
 
 	userRepo := infra.NewUserRepository(db)
@@ -34,8 +34,8 @@ func main() {
 	authMiddleware := middleware.NewAuthMiddleware(jwtUtil)
 	authUsecase := usecase.NewAuthService(userRepo, jwtUtil, cfg)
 	userUsecase := usecase.NewUserService(userRepo)
-	authController := controller.NewAuthController(authUsecase)
-	userController := controller.NewUserController(userUsecase)
+	authController := controllers.NewAuthController(authUsecase)
+	userController := controllers.NewUserController(userUsecase)
 
 	app := fiber.New()
 	api := app.Group("/api")
@@ -54,6 +54,6 @@ func main() {
 	}
 
 	if err = app.Listen(fmt.Sprintf(":%s", cfg.Server.Port)); err != nil {
-		log.Fatalf("error of starting app: %v", err)
+		log.Fatalf("error of starting app: %s", err.Error())
 	}
 }

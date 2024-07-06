@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"AuthService/internal/constants"
-	"AuthService/internal/utils"
+	"AuthService/pkg/utils"
 	"github.com/gofiber/fiber/v3"
 	"strings"
 )
