@@ -1,6 +1,7 @@
 package config
 
 import (
+	"AuthService/internal/constants"
 	"github.com/spf13/viper"
 	"os"
 )
@@ -27,23 +28,24 @@ type PostgresConfig struct {
 
 type PasswordConfig struct {
 	Salt             string
-	MinLength        uint
-	MaxLength        uint
+	MinLength        int
+	MaxLength        int
 	IncludeLowercase bool
 	IncludeUppercase bool
 	IncludeChars     bool
 	IncludeDigits    bool
+	IncludeSpecial   bool
 }
 
 type JWTConfig struct {
 	Secret string
 }
 
-func GetConfig(configPath, configName, configType string) (*Config, error) {
+func GetConfig() (*Config, error) {
 	v := viper.New()
-	v.AddConfigPath(configPath)
-	v.SetConfigName(configName)
-	v.SetConfigType(configType)
+	v.AddConfigPath(constants.ConfigPath)
+	v.SetConfigName(constants.ConfigName)
+	v.SetConfigType(constants.ConfigType)
 	if err := v.ReadInConfig(); err != nil {
 		return nil, err
 	}
