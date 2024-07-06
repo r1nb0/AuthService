@@ -31,7 +31,7 @@ func (s *authService) generatePasswordHash(password string) string {
 
 func (s *authService) SignIn(ctx context.Context, dto *domain.UserAuthDTO) (string, error) {
 	dto.Password = s.generatePasswordHash(dto.Password)
-	user, err := s.repo.GetUser(ctx, dto)
+	user, err := s.repo.GetByAuthData(ctx, dto)
 	if err != nil {
 		return "", err
 	}
@@ -44,5 +44,5 @@ func (s *authService) SignIn(ctx context.Context, dto *domain.UserAuthDTO) (stri
 
 func (s *authService) SignUp(ctx context.Context, dto *domain.UserDTO) (int, error) {
 	dto.Password = s.generatePasswordHash(dto.Password)
-	return s.repo.CreateUser(ctx, dto)
+	return s.repo.Create(ctx, dto)
 }
