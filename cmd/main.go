@@ -6,7 +6,7 @@ import (
 	"AuthService/internal/infra"
 	"AuthService/internal/middleware"
 	"AuthService/internal/usecase"
-	"AuthService/pkg/utils"
+	"AuthService/internal/utils"
 	"fmt"
 	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"

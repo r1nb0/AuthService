@@ -3,7 +3,7 @@ package usecase
 import (
 	"AuthService/internal/config"
 	"AuthService/internal/domain"
-	"AuthService/pkg/utils"
+	"AuthService/internal/utils"
 	"context"
 	"crypto/sha1"
 	"fmt"
