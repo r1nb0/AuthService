@@ -1,8 +1,9 @@
 package constants
 
 const (
-	AdminRoleName   string = "admin"
-	DefaultRoleName string = "user"
+	ConfigPath string = "./configs"
+	ConfigName string = "config-prod"
+	ConfigType string = "yaml"
 
 	AuthorizationHeaderKey string = "Authorization"
 	UserIdKey              string = "UserID"
