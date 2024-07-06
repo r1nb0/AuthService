@@ -5,6 +5,7 @@ import (
 	"AuthService/internal/controller"
 	"AuthService/internal/infra"
 	"AuthService/internal/usecase"
+	"AuthService/internal/utils"
 	"fmt"
 	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"
@@ -27,16 +28,17 @@ func main() {
 		log.Fatalf("error of initializing db: %v", err)
 	}
 
-	repo := infra.NewUserRepository(db)
-	uc := usecase.NewAuthService(repo, cfg)
-	handler := controller.NewAuthController(uc)
+	userRepo := infra.NewUserRepository(db)
+	jwtUtil := utils.NewJWTUtil(cfg)
+	authUsecase := usecase.NewAuthService(userRepo, jwtUtil, cfg)
+	authController := controller.NewAuthController(authUsecase)
 
 	app := fiber.New()
 	api := app.Group("/api")
 	auth := api.Group("/auth")
 	{
-		auth.Post("/sign-in", handler.SignIn)
-		auth.Post("/sign-up", handler.SignUp)
+		auth.Post("/sign-in", authController.SignIn)
+		auth.Post("/sign-up", authController.SignUp)
 	}
 
 	if err = app.Listen(fmt.Sprintf(":%s", cfg.Server.Port)); err != nil {
