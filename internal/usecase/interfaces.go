@@ -5,7 +5,7 @@ import (
 	"context"
 )
 
-type UseCase interface {
+type AuthUseCase interface {
 	SignIn(ctx context.Context, dto *domain.UserAuthDTO) (string, error)
 	SignUp(ctx context.Context, dto *domain.UserDTO) (int, error)
 }
