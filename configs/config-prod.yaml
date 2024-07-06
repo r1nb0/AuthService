@@ -13,3 +13,4 @@ password :
     includeDigits : true
     includeUppercase : true
     includeLowercase : true
+    includeSpecial : true
