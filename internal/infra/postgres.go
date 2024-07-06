@@ -1,7 +1,7 @@
 package infra
 
 import (
-	"AuthService/config"
+	"AuthService/internal/config"
 	"context"
 	"fmt"
 	"github.com/jmoiron/sqlx"
