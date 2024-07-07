@@ -49,28 +49,28 @@ func (l *zapLogger) Init() {
 	l.logger = zap.New(core)
 }
 
-func (l *zapLogger) Info(cat Category, sub SubCategory, msg string, extra map[string]interface{}) {
-	fields := prepareLogInfo(cat, sub, extra)
+func (l *zapLogger) Info(cat Category, sub SubCategory, msg string, another map[string]interface{}) {
+	fields := prepareLogInfo(cat, sub, another)
 	l.logger.Info(msg, fields...)
 }
 
-func (l *zapLogger) Debug(cat Category, sub SubCategory, msg string, extra map[string]interface{}) {
-	fields := prepareLogInfo(cat, sub, extra)
+func (l *zapLogger) Debug(cat Category, sub SubCategory, msg string, another map[string]interface{}) {
+	fields := prepareLogInfo(cat, sub, another)
 	l.logger.Debug(msg, fields...)
 }
 
-func (l *zapLogger) Warn(cat Category, sub SubCategory, msg string, extra map[string]interface{}) {
-	fields := prepareLogInfo(cat, sub, extra)
+func (l *zapLogger) Warn(cat Category, sub SubCategory, msg string, another map[string]interface{}) {
+	fields := prepareLogInfo(cat, sub, another)
 	l.logger.Warn(msg, fields...)
 }
 
-func (l *zapLogger) Error(cat Category, sub SubCategory, msg string, extra map[string]interface{}) {
-	fields := prepareLogInfo(cat, sub, extra)
+func (l *zapLogger) Error(cat Category, sub SubCategory, msg string, another map[string]interface{}) {
+	fields := prepareLogInfo(cat, sub, another)
 	l.logger.Error(msg, fields...)
 }
 
-func (l *zapLogger) Fatal(cat Category, sub SubCategory, msg string, extra map[string]interface{}) {
-	fields := prepareLogInfo(cat, sub, extra)
+func (l *zapLogger) Fatal(cat Category, sub SubCategory, msg string, another map[string]interface{}) {
+	fields := prepareLogInfo(cat, sub, another)
 	l.logger.Fatal(msg, fields...)
 }
 
