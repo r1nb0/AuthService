@@ -6,7 +6,7 @@ import (
 	"errors"
 	"github.com/jmoiron/sqlx"
 	"github.com/r1nb0/UserService/internal/domain"
-	logging2 "github.com/r1nb0/UserService/internal/logging"
+	logging2"github.com/r1nb0/UserService/internal/logging"
 )
 
 type userRepository struct {
