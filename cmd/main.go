@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	controllers2 "github.com/r1nb0/UserService/api/controllers"
+	"github.com/r1nb0/UserService/api/controllers"
 	"github.com/r1nb0/UserService/api/middleware"
 	"github.com/r1nb0/UserService/configs"
 	"github.com/r1nb0/UserService/infra"
@@ -37,8 +37,8 @@ func main() {
 	authMiddleware := middleware.NewAuthMiddleware(jwtUtil)
 	authUsecase := usecase.NewAuthService(userRepo, jwtUtil, cfg)
 	userUsecase := usecase.NewUserService(userRepo)
-	authController := controllers2.NewAuthController(authUsecase)
-	userController := controllers2.NewUserController(userUsecase)
+	authController := controllers.NewAuthController(authUsecase)
+	userController := controllers.NewUserController(userUsecase)
 
 	app := fiber.New()
 	api := app.Group("/api")
