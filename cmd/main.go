@@ -8,10 +8,10 @@ import (
 	"github.com/r1nb0/UserService/configs"
 	"github.com/r1nb0/UserService/controllers"
 	"github.com/r1nb0/UserService/infra"
-	"github.com/r1nb0/UserService/logging"
 	"github.com/r1nb0/UserService/middleware"
+	"github.com/r1nb0/UserService/pkg/logging"
+	"github.com/r1nb0/UserService/pkg/utils"
 	"github.com/r1nb0/UserService/usecase"
-	"github.com/r1nb0/UserService/utils"
 	"log"
 )
 

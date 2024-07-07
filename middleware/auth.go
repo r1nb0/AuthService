@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/r1nb0/UserService/constants"
-	"github.com/r1nb0/UserService/utils"
+	"github.com/r1nb0/UserService/pkg/utils"
 	"strings"
 )
 

@@ -6,15 +6,15 @@ import (
 	"errors"
 	"github.com/jmoiron/sqlx"
 	"github.com/r1nb0/UserService/domain"
-	"github.com/r1nb0/UserService/logging"
+	logging2 "github.com/r1nb0/UserService/pkg/logging"
 )
 
 type userRepository struct {
 	db     *sqlx.DB
-	logger logging.Logger
+	logger logging2.Logger
 }
 
-func NewUserRepository(db *sqlx.DB, logger logging.Logger) domain.UserRepository {
+func NewUserRepository(db *sqlx.DB, logger logging2.Logger) domain.UserRepository {
 	return &userRepository{
 		db:     db,
 		logger: logger,
@@ -29,7 +29,7 @@ func (r *userRepository) Create(ctx context.Context, user *domain.UserDTO) (int,
 		query,
 	)
 	if err != nil {
-		r.logger.Error(logging.Postgres, logging.Insert, err.Error(), nil)
+		r.logger.Error(logging2.Postgres, logging2.Insert, err.Error(), nil)
 		return 0, err
 	}
 	defer closeStmt(stmt, err)
@@ -39,7 +39,7 @@ func (r *userRepository) Create(ctx context.Context, user *domain.UserDTO) (int,
 		user.Password,
 	)
 	if err := row.Scan(&id); err != nil {
-		r.logger.Error(logging.Postgres, logging.Insert, err.Error(), nil)
+		r.logger.Error(logging2.Postgres, logging2.Insert, err.Error(), nil)
 		return 0, err
 	}
 	return id, nil
@@ -53,7 +53,7 @@ func (r *userRepository) GetByAuthData(ctx context.Context, dto *domain.UserAuth
 		query,
 	)
 	if err != nil {
-		r.logger.Error(logging.Postgres, logging.Select, err.Error(), nil)
+		r.logger.Error(logging2.Postgres, logging2.Select, err.Error(), nil)
 		return nil, err
 	}
 	defer closeStmt(stmt, err)
@@ -63,7 +63,7 @@ func (r *userRepository) GetByAuthData(ctx context.Context, dto *domain.UserAuth
 		&user.LastName, &user.Nickname,
 		&user.Email, &user.Password,
 	); err != nil {
-		r.logger.Error(logging.Postgres, logging.Select, err.Error(), nil)
+		r.logger.Error(logging2.Postgres, logging2.Select, err.Error(), nil)
 		return nil, err
 	}
 	return &user, nil
@@ -77,7 +77,7 @@ func (r *userRepository) GetAll(ctx context.Context) ([]*domain.User, error) {
 		query,
 	)
 	if err != nil {
-		r.logger.Error(logging.Postgres, logging.Select, err.Error(), nil)
+		r.logger.Error(logging2.Postgres, logging2.Select, err.Error(), nil)
 		return nil, err
 	}
 	defer closeStmt(stmt, err)
@@ -92,7 +92,7 @@ func (r *userRepository) GetAll(ctx context.Context) ([]*domain.User, error) {
 			&user.LastName, &user.Nickname,
 			&user.Email, &user.Password,
 		); err != nil {
-			r.logger.Error(logging.Postgres, logging.Select, err.Error(), nil)
+			r.logger.Error(logging2.Postgres, logging2.Select, err.Error(), nil)
 			return nil, err
 		}
 		users = append(users, &user)
@@ -108,7 +108,7 @@ func (r *userRepository) GetByID(ctx context.Context, id int) (*domain.User, err
 		query,
 	)
 	if err != nil {
-		r.logger.Error(logging.Postgres, logging.Select, err.Error(), nil)
+		r.logger.Error(logging2.Postgres, logging2.Select, err.Error(), nil)
 		return nil, err
 	}
 	defer closeStmt(stmt, err)
@@ -118,7 +118,7 @@ func (r *userRepository) GetByID(ctx context.Context, id int) (*domain.User, err
 		&user.LastName, &user.Nickname,
 		&user.Email, &user.Password,
 	); err != nil {
-		r.logger.Error(logging.Postgres, logging.Select, err.Error(), nil)
+		r.logger.Error(logging2.Postgres, logging2.Select, err.Error(), nil)
 		return nil, err
 	}
 	return &user, nil

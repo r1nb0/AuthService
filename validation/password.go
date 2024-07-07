@@ -3,7 +3,7 @@ package validation
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/r1nb0/UserService/configs"
-	"github.com/r1nb0/UserService/utils"
+	"github.com/r1nb0/UserService/pkg/utils"
 	"log"
 )
 
