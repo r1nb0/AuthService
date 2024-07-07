@@ -1,19 +1,19 @@
 package utils
 
 import (
-	"AuthService/internal/config"
-	"AuthService/internal/constants"
-	"AuthService/internal/domain"
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/r1nb0/UserService/configs"
+	"github.com/r1nb0/UserService/internal/constants"
+	"github.com/r1nb0/UserService/internal/domain"
 	"time"
 )
 
 type JWTUtil struct {
-	cfg *config.Config
+	cfg *configs.Config
 }
 
-func NewJWTUtil(cfg *config.Config) *JWTUtil {
+func NewJWTUtil(cfg *configs.Config) *JWTUtil {
 	return &JWTUtil{
 		cfg: cfg,
 	}

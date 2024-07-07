@@ -1,14 +1,14 @@
 package validation
 
 import (
-	"AuthService/internal/config"
-	"AuthService/pkg/utils"
 	"github.com/go-playground/validator/v10"
+	"github.com/r1nb0/UserService/configs"
+	"github.com/r1nb0/UserService/internal/utils"
 	"log"
 )
 
 func checkPassword(pass string) bool {
-	cfg, err := config.GetConfig()
+	cfg, err := configs.GetConfig()
 	if err != nil {
 		log.Fatalf("error of getting config: %s", err.Error())
 	}
