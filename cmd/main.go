@@ -1,16 +1,17 @@
 package main
 
 import (
-	"AuthService/internal/config"
-	"AuthService/internal/controllers"
-	"AuthService/internal/infra"
-	"AuthService/internal/middleware"
-	"AuthService/internal/usecase"
-	"AuthService/internal/utils"
 	"fmt"
 	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/r1nb0/UserService/configs"
+	"github.com/r1nb0/UserService/internal/controllers"
+	"github.com/r1nb0/UserService/internal/infra"
+	"github.com/r1nb0/UserService/internal/middleware"
+	"github.com/r1nb0/UserService/internal/usecase"
+	"github.com/r1nb0/UserService/internal/utils"
+	"github.com/r1nb0/UserService/pkg/logging"
 	"log"
 )
 
@@ -19,7 +20,7 @@ func main() {
 		log.Fatalf("Error loading .env file : %v", err)
 	}
 
-	cfg, err := config.GetConfig()
+	cfg, err := configs.GetConfig()
 	if err != nil {
 		log.Fatalf("error of loading configs: %s", err.Error())
 	}
@@ -29,7 +30,9 @@ func main() {
 		log.Fatalf("error of initializing db: %s", err.Error())
 	}
 
-	userRepo := infra.NewUserRepository(db)
+	logger := logging.NewZapLogger(cfg)
+
+	userRepo := infra.NewUserRepository(db, logger)
 	jwtUtil := utils.NewJWTUtil(cfg)
 	authMiddleware := middleware.NewAuthMiddleware(jwtUtil)
 	authUsecase := usecase.NewAuthService(userRepo, jwtUtil, cfg)
