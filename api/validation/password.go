@@ -4,14 +4,10 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/r1nb0/UserService/configs"
 	"github.com/r1nb0/UserService/pkg/utils"
-	"log"
 )
 
 func checkPassword(pass string) bool {
-	cfg, err := configs.GetConfig()
-	if err != nil {
-		log.Fatalf("error of getting config: %s", err.Error())
-	}
+	cfg := configs.GetConfig()
 	if len(pass) < cfg.Password.MinLength {
 		return false
 	}
