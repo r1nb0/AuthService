@@ -21,7 +21,6 @@ type AppServer struct {
 	cfg            *configs.Config
 	logger         logging.Logger
 	userController *controllers.UserController
-	authController *controllers.AuthController
 	authMiddleware *middleware.AuthMiddleware
 }
 
@@ -33,17 +32,14 @@ func NewAppServer(cfg *configs.Config) *AppServer {
 	}
 	repo := infra.NewUserRepository(db, logger)
 	jwtUtil := utils.NewJWTUtil(cfg)
-	authUsecase := usecase.NewAuthService(repo, jwtUtil, cfg)
-	userUsecase := usecase.NewUserService(repo)
+	userUsecase := usecase.NewUserService(repo, jwtUtil, cfg)
 	authMiddleware := middleware.NewAuthMiddleware(jwtUtil)
-	authController := controllers.NewAuthController(authUsecase)
 	userController := controllers.NewUserController(userUsecase)
 	return &AppServer{
 		cfg:            cfg,
 		logger:         logger,
 		authMiddleware: authMiddleware,
 		userController: userController,
-		authController: authController,
 	}
 }
 
@@ -63,8 +59,8 @@ func (serv *AppServer) initRoutes(router *gin.Engine) {
 	v1 := api.Group("/v1")
 	auth := v1.Group("/auth")
 	{
-		auth.POST("/sign-in", serv.authController.SignIn)
-		auth.POST("/sign-up", serv.authController.SignUp)
+		auth.POST("/sign-in", serv.userController.SignIn)
+		auth.POST("/sign-up", serv.userController.SignUp)
 	}
 	users := v1.Group("/users")
 	{

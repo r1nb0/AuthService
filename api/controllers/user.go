@@ -19,6 +19,48 @@ func NewUserController(uc usecase.UserUseCase) *UserController {
 	}
 }
 
+func (c *UserController) SignIn(ctx *gin.Context) {
+	var input domain.UserAuthDTO
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	token, err := c.uc.SignIn(ctx, &input)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"token":   token,
+	})
+}
+
+func (c *UserController) SignUp(ctx *gin.Context) {
+	var input domain.UserDTO
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	id, err := c.uc.SignUp(ctx, &input)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"id":      id,
+	})
+}
+
 func (c *UserController) GetAll(ctx *gin.Context) {
 	users, err := c.uc.GetAll(ctx)
 	if err != nil {
