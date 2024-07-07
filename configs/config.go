@@ -3,6 +3,7 @@ package configs
 import (
 	"github.com/r1nb0/UserService/constants"
 	"github.com/spf13/viper"
+	"log"
 	"os"
 )
 
@@ -49,19 +50,19 @@ type JWTConfig struct {
 	Secret string
 }
 
-func GetConfig() (*Config, error) {
+func GetConfig() *Config {
 	v := viper.New()
 	v.AddConfigPath(constants.ConfigPath)
 	v.SetConfigName(constants.ConfigName)
 	v.SetConfigType(constants.ConfigType)
 	if err := v.ReadInConfig(); err != nil {
-		return nil, err
+		log.Fatalf("error of initializing config: %s", err.Error())
 	}
 	cfg, err := parseConfig(v)
 	if err != nil {
-		return nil, err
+		log.Fatalf("error of parsing config: %s", err.Error())
 	}
-	return cfg, nil
+	return cfg
 }
 
 func parseConfig(v *viper.Viper) (*Config, error) {
