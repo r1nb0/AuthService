@@ -26,6 +26,7 @@ func (c *UserController) SignIn(ctx *gin.Context) {
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
 	token, err := c.uc.SignIn(ctx, &input)
 	if err != nil {
@@ -33,6 +34,7 @@ func (c *UserController) SignIn(ctx *gin.Context) {
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -47,6 +49,7 @@ func (c *UserController) SignUp(ctx *gin.Context) {
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
 	id, err := c.uc.SignUp(ctx, &input)
 	if err != nil {
@@ -54,6 +57,7 @@ func (c *UserController) SignUp(ctx *gin.Context) {
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -68,12 +72,12 @@ func (c *UserController) GetAll(ctx *gin.Context) {
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data":    users,
 	})
-	return
 }
 
 func (c *UserController) GetByID(ctx *gin.Context) {
