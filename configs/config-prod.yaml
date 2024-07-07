@@ -14,3 +14,8 @@ password :
     includeUppercase : true
     includeLowercase : true
     includeSpecial : true
+logger :
+    filePath : "./logs/app.log"
+    maxSize : 7
+    maxBackups : 5
+    maxAge : 20

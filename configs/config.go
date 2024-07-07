@@ -1,7 +1,7 @@
-package config
+package configs
 
 import (
-	"AuthService/internal/constants"
+	"github.com/r1nb0/UserService/internal/constants"
 	"github.com/spf13/viper"
 	"os"
 )
@@ -11,6 +11,7 @@ type Config struct {
 	Postgres PostgresConfig
 	Password PasswordConfig
 	JWT      JWTConfig
+	Logger   LoggerConfig
 }
 
 type ServerConfig struct {
@@ -35,6 +36,13 @@ type PasswordConfig struct {
 	IncludeChars     bool
 	IncludeDigits    bool
 	IncludeSpecial   bool
+}
+
+type LoggerConfig struct {
+	FilePath   string
+	MaxSize    int
+	MaxBackups int
+	MaxAge     int
 }
 
 type JWTConfig struct {
