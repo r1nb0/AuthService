@@ -1,21 +1,21 @@
 package usecase
 
 import (
-	"AuthService/internal/config"
-	"AuthService/internal/domain"
-	"AuthService/internal/utils"
 	"context"
 	"crypto/sha1"
 	"fmt"
+	"github.com/r1nb0/UserService/configs"
+	"github.com/r1nb0/UserService/internal/domain"
+	"github.com/r1nb0/UserService/internal/utils"
 )
 
 type authService struct {
 	repo    domain.UserRepository
 	jwtUtil *utils.JWTUtil
-	cfg     *config.Config
+	cfg     *configs.Config
 }
 
-func NewAuthService(repo domain.UserRepository, jwtUtil *utils.JWTUtil, cfg *config.Config) AuthUseCase {
+func NewAuthService(repo domain.UserRepository, jwtUtil *utils.JWTUtil, cfg *configs.Config) AuthUseCase {
 	return &authService{
 		repo:    repo,
 		jwtUtil: jwtUtil,

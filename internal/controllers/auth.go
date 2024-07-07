@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"AuthService/internal/domain"
-	"AuthService/internal/usecase"
 	"github.com/gofiber/fiber/v3"
+	"github.com/r1nb0/UserService/internal/domain"
+	"github.com/r1nb0/UserService/internal/usecase"
 )
 
 type AuthController struct {

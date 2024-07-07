@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"AuthService/internal/constants"
-	"AuthService/internal/utils"
 	"github.com/gofiber/fiber/v3"
+	"github.com/r1nb0/UserService/internal/constants"
+	"github.com/r1nb0/UserService/internal/utils"
 	"strings"
 )
 
