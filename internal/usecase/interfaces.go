@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"AuthService/internal/domain"
 	"context"
+	"github.com/r1nb0/UserService/internal/domain"
 )
 
 type AuthUseCase interface {
