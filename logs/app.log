@@ -1,1 +1,5 @@
 {"level":"error","timestamp":"2024-07-07T16:33:59.758+0300","msg":"test","Category":"General","SubCategory":"Startup"}
+{"level":"error","timestamp":"2024-07-07T23:13:42.049+0300","msg":"sql: no rows in result set","Category":"Postgres","SubCategory":"Select"}
+{"level":"error","timestamp":"2024-07-07T23:13:55.581+0300","msg":"sql: no rows in result set","Category":"Postgres","SubCategory":"Select"}
+{"level":"error","timestamp":"2024-07-07T23:15:42.273+0300","msg":"sql: no rows in result set","Category":"Postgres","SubCategory":"Select"}
+{"level":"error","timestamp":"2024-07-07T23:16:21.505+0300","msg":"sql: no rows in result set","Category":"Postgres","SubCategory":"Select"}
