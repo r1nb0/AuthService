@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS users
 );
 
 CREATE INDEX IF NOT EXISTS idx_email ON users (email);
-CREATE INDEX IF NOT EXISTS idx_nickname ON users (nicknamea);
+CREATE INDEX IF NOT EXISTS idx_nickname ON users (nickname);
