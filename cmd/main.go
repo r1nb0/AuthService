@@ -6,12 +6,12 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/r1nb0/UserService/configs"
-	"github.com/r1nb0/UserService/internal/controllers"
-	"github.com/r1nb0/UserService/internal/infra"
-	"github.com/r1nb0/UserService/internal/logging"
-	"github.com/r1nb0/UserService/internal/middleware"
-	"github.com/r1nb0/UserService/internal/usecase"
-	"github.com/r1nb0/UserService/internal/utils"
+	"github.com/r1nb0/UserService/controllers"
+	"github.com/r1nb0/UserService/infra"
+	"github.com/r1nb0/UserService/logging"
+	"github.com/r1nb0/UserService/middleware"
+	"github.com/r1nb0/UserService/usecase"
+	"github.com/r1nb0/UserService/utils"
 	"log"
 )
 

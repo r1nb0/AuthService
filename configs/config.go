@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"github.com/r1nb0/UserService/internal/constants"
+	"github.com/r1nb0/UserService/constants"
 	"github.com/spf13/viper"
 	"os"
 )
