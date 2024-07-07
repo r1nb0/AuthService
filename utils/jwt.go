@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/r1nb0/UserService/configs"
-	"github.com/r1nb0/UserService/internal/constants"
-	"github.com/r1nb0/UserService/internal/domain"
+	"github.com/r1nb0/UserService/constants"
+	"github.com/r1nb0/UserService/domain"
 	"time"
 )
 

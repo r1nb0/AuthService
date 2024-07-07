@@ -5,8 +5,8 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"github.com/r1nb0/UserService/configs"
-	"github.com/r1nb0/UserService/internal/domain"
-	"github.com/r1nb0/UserService/internal/utils"
+	"github.com/r1nb0/UserService/domain"
+	"github.com/r1nb0/UserService/utils"
 )
 
 type authService struct {
