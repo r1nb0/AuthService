@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"github.com/gofiber/fiber/v3"
+	"github.com/gin-gonic/gin"
 	"github.com/r1nb0/UserService/domain"
 	"github.com/r1nb0/UserService/usecase"
+	"net/http"
 )
 
 type AuthController struct {
@@ -16,43 +17,43 @@ func NewAuthController(uc usecase.AuthUseCase) *AuthController {
 	}
 }
 
-func (c *AuthController) SignIn(ctx fiber.Ctx) error {
+func (c *AuthController) SignIn(ctx *gin.Context) {
 	var input domain.UserAuthDTO
-	if err := ctx.Bind().JSON(&input); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
 	}
-	token, err := c.uc.SignIn(ctx.Context(), &input)
+	token, err := c.uc.SignIn(ctx, &input)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
 	}
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"token":   token,
 	})
 }
 
-func (c *AuthController) SignUp(ctx fiber.Ctx) error {
+func (c *AuthController) SignUp(ctx *gin.Context) {
 	var input domain.UserDTO
-	if err := ctx.Bind().JSON(&input); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
 	}
-	id, err := c.uc.SignUp(ctx.Context(), &input)
+	id, err := c.uc.SignUp(ctx, &input)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
 	}
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"id":      id,
 	})

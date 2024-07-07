@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"github.com/gofiber/fiber/v3"
+	"github.com/gin-gonic/gin"
 	"github.com/r1nb0/UserService/constants"
 	"github.com/r1nb0/UserService/domain"
 	"github.com/r1nb0/UserService/usecase"
+	"net/http"
 	"strconv"
 )
 
@@ -18,57 +19,60 @@ func NewUserController(uc usecase.UserUseCase) *UserController {
 	}
 }
 
-func (c *UserController) GetAll(ctx fiber.Ctx) error {
-	users, err := c.uc.GetAll(ctx.Context())
+func (c *UserController) GetAll(ctx *gin.Context) {
+	users, err := c.uc.GetAll(ctx)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
 	}
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data":    users,
 	})
+	return
 }
 
-func (c *UserController) GetByID(ctx fiber.Ctx) error {
-	id, err := strconv.Atoi(ctx.Params("id"))
+func (c *UserController) GetByID(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
-	user, err := c.uc.GetByID(ctx.Context(), id)
+	user, err := c.uc.GetByID(ctx, id)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data":    user,
 	})
 }
 
-func (c *UserController) Update(ctx fiber.Ctx) error {
-	authID := ctx.Locals(constants.UserIdKey).(int)
+func (c *UserController) Update(ctx *gin.Context) {
+	authID, _ := ctx.Get(constants.UserIdKey)
 	var input domain.UserDTO
-	if err := ctx.Bind().JSON(&input); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
-	if err := c.uc.Update(ctx.Context(), authID, &input); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+	if err := c.uc.Update(ctx, authID.(int), &input); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-		"success": true,
-	})
+	ctx.Status(http.StatusOK)
 }
