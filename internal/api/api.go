@@ -6,15 +6,15 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/r1nb0/UserService/api/controllers"
-	"github.com/r1nb0/UserService/api/middleware"
-	"github.com/r1nb0/UserService/api/validation"
 	"github.com/r1nb0/UserService/configs"
-	"github.com/r1nb0/UserService/infra"
+	"github.com/r1nb0/UserService/internal/api/controllers"
+	middleware2 "github.com/r1nb0/UserService/internal/api/middleware"
+	"github.com/r1nb0/UserService/internal/api/validation"
+	infra2 "github.com/r1nb0/UserService/internal/infra"
+	"github.com/r1nb0/UserService/internal/usecase"
+	"github.com/r1nb0/UserService/internal/utils"
 	"github.com/r1nb0/UserService/pkg/logging"
 	"github.com/r1nb0/UserService/pkg/metrics"
-	"github.com/r1nb0/UserService/pkg/utils"
-	"github.com/r1nb0/UserService/usecase"
 	"net/http"
 	"time"
 )
@@ -24,19 +24,19 @@ type AppServer struct {
 	cfg            *configs.Config
 	logger         logging.Logger
 	userController *controllers.UserController
-	authMiddleware *middleware.AuthMiddleware
+	authMiddleware *middleware2.AuthMiddleware
 }
 
 func NewAppServer(cfg *configs.Config) *AppServer {
 	logger := logging.NewZapLogger(cfg)
-	db, err := infra.InitPostgres(cfg)
+	db, err := infra2.InitPostgres(cfg)
 	if err != nil {
 		logger.Fatal(logging.Postgres, logging.Startup, err.Error(), nil)
 	}
-	repo := infra.NewUserRepository(db, logger)
+	repo := infra2.NewUserRepository(db, logger)
 	jwtUtil := utils.NewJWTUtil(cfg)
 	userUsecase := usecase.NewUserService(repo, jwtUtil, cfg)
-	authMiddleware := middleware.NewAuthMiddleware(jwtUtil)
+	authMiddleware := middleware2.NewAuthMiddleware(jwtUtil)
 	userController := controllers.NewUserController(userUsecase)
 	return &AppServer{
 		cfg:            cfg,
@@ -70,8 +70,10 @@ func (serv *AppServer) initRoutes(router *gin.Engine) {
 		users.GET("/", serv.userController.GetAll)
 		users.GET("/:id", serv.userController.GetByID)
 		users.PUT("/", serv.authMiddleware.Authentication(), serv.userController.Update)
+		users.PUT("/email", serv.authMiddleware.Authentication(), serv.userController.ChangeEmail)
+		users.PUT("/password", serv.authMiddleware.Authentication(), serv.userController.ChangePassword)
 	}
-	router.Use(middleware.PrometheusMiddleware())
+	router.Use(middleware2.PrometheusMiddleware())
 	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
 }
 
