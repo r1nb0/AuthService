@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v3"
 	"github.com/r1nb0/UserService/constants"
-	"github.com/r1nb0/UserService/pkg/utils"
+	"github.com/r1nb0/UserService/internal/utils"
 	"net/http"
 	"strings"
 )
@@ -19,8 +19,6 @@ func NewAuthMiddleware(jwtUtil *utils.JWTUtil) *AuthMiddleware {
 	}
 }
 
-// Authentication
-// TODO error response struct
 func (m *AuthMiddleware) Authentication() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		auth := ctx.GetHeader(constants.AuthorizationHeaderKey)
@@ -52,5 +50,13 @@ func (m *AuthMiddleware) Authentication() gin.HandlerFunc {
 		ctx.Set(constants.NicknameKey, claimsMap[constants.NicknameKey])
 		ctx.Set(constants.ExpireTimeKey, claimsMap[constants.ExpireTimeKey])
 		ctx.Next()
+	}
+}
+
+// Authorization
+// TODO impl
+func (m *AuthMiddleware) Authorization(role string) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
 	}
 }
