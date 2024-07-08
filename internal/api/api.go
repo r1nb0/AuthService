@@ -8,9 +8,9 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/r1nb0/UserService/configs"
 	"github.com/r1nb0/UserService/internal/api/controllers"
-	middleware2 "github.com/r1nb0/UserService/internal/api/middleware"
+	"github.com/r1nb0/UserService/internal/api/middleware"
 	"github.com/r1nb0/UserService/internal/api/validation"
-	infra2 "github.com/r1nb0/UserService/internal/infra"
+	"github.com/r1nb0/UserService/internal/infra"
 	"github.com/r1nb0/UserService/internal/usecase"
 	"github.com/r1nb0/UserService/internal/utils"
 	"github.com/r1nb0/UserService/pkg/logging"
@@ -24,19 +24,19 @@ type AppServer struct {
 	cfg            *configs.Config
 	logger         logging.Logger
 	userController *controllers.UserController
-	authMiddleware *middleware2.AuthMiddleware
+	authMiddleware *middleware.AuthMiddleware
 }
 
 func NewAppServer(cfg *configs.Config) *AppServer {
 	logger := logging.NewZapLogger(cfg)
-	db, err := infra2.InitPostgres(cfg)
+	db, err := infra.InitPostgres(cfg)
 	if err != nil {
 		logger.Fatal(logging.Postgres, logging.Startup, err.Error(), nil)
 	}
-	repo := infra2.NewUserRepository(db, logger)
+	repo := infra.NewUserRepository(db, logger)
 	jwtUtil := utils.NewJWTUtil(cfg)
 	userUsecase := usecase.NewUserService(repo, jwtUtil, cfg)
-	authMiddleware := middleware2.NewAuthMiddleware(jwtUtil)
+	authMiddleware := middleware.NewAuthMiddleware(jwtUtil)
 	userController := controllers.NewUserController(userUsecase)
 	return &AppServer{
 		cfg:            cfg,
@@ -73,7 +73,7 @@ func (serv *AppServer) initRoutes(router *gin.Engine) {
 		users.PUT("/email", serv.authMiddleware.Authentication(), serv.userController.ChangeEmail)
 		users.PUT("/password", serv.authMiddleware.Authentication(), serv.userController.ChangePassword)
 	}
-	router.Use(middleware2.PrometheusMiddleware())
+	router.Use(middleware.PrometheusMiddleware())
 	router.GET("/metrics", gin.WrapH(promhttp.Handler()))
 }
 
