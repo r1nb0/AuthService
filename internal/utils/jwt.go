@@ -5,7 +5,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/r1nb0/UserService/configs"
 	"github.com/r1nb0/UserService/constants"
-	"github.com/r1nb0/UserService/domain"
+	"github.com/r1nb0/UserService/internal/domain"
 	"time"
 )
 
