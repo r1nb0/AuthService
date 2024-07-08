@@ -3,8 +3,8 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/r1nb0/UserService/constants"
-	"github.com/r1nb0/UserService/domain"
-	"github.com/r1nb0/UserService/usecase"
+	"github.com/r1nb0/UserService/internal/domain"
+	"github.com/r1nb0/UserService/internal/usecase"
 	"net/http"
 	"strconv"
 )
@@ -20,7 +20,7 @@ func NewUserController(uc usecase.UserUseCase) *UserController {
 }
 
 func (c *UserController) SignIn(ctx *gin.Context) {
-	var input domain.UserAuthDTO
+	var input domain.AuthenticateUser
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -43,7 +43,7 @@ func (c *UserController) SignIn(ctx *gin.Context) {
 }
 
 func (c *UserController) SignUp(ctx *gin.Context) {
-	var input domain.UserDTO
+	var input domain.CreateUser
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -105,7 +105,7 @@ func (c *UserController) GetByID(ctx *gin.Context) {
 
 func (c *UserController) Update(ctx *gin.Context) {
 	authID, _ := ctx.Get(constants.UserIdKey)
-	var input domain.UserDTO
+	var input domain.UpdateUserGeneralInfo
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"success": false,
@@ -119,6 +119,42 @@ func (c *UserController) Update(ctx *gin.Context) {
 			"error":   err.Error(),
 		})
 		return
+	}
+	ctx.Status(http.StatusOK)
+}
+
+func (c *UserController) ChangePassword(ctx *gin.Context) {
+	authID, _ := ctx.Get(constants.UserIdKey)
+	var req domain.ChangePasswordRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	if err := c.uc.UpdatePassword(ctx, authID.(int), req.NewPassword); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	ctx.Status(http.StatusOK)
+}
+
+func (c *UserController) ChangeEmail(ctx *gin.Context) {
+	authID, _ := ctx.Get(constants.UserIdKey)
+	var req domain.ChangeEmailRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
+	}
+	if err := c.uc.UpdateEmail(ctx, authID.(int), req.NewEmail); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"error":   err.Error(),
+		})
 	}
 	ctx.Status(http.StatusOK)
 }

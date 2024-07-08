@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/jmoiron/sqlx"
-	"github.com/r1nb0/UserService/domain"
+	"github.com/r1nb0/UserService/internal/domain"
 	"github.com/r1nb0/UserService/pkg/logging"
 )
 
@@ -21,7 +21,7 @@ func NewUserRepository(db *sqlx.DB, logger logging.Logger) domain.UserRepository
 	}
 }
 
-func (r *userRepository) Create(ctx context.Context, user *domain.UserDTO) (int, error) {
+func (r *userRepository) Create(ctx context.Context, dto *domain.CreateUser) (int, error) {
 	var id int
 	query := "INSERT INTO users (first_name, last_name, nickname, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING id"
 	stmt, err := r.db.PrepareContext(
@@ -34,9 +34,9 @@ func (r *userRepository) Create(ctx context.Context, user *domain.UserDTO) (int,
 	}
 	defer closeStmt(stmt, err)
 	row := stmt.QueryRowContext(
-		ctx, user.FirstName, user.LastName,
-		user.Nickname, user.Email,
-		user.Password,
+		ctx, dto.FirstName, dto.LastName,
+		dto.Nickname, dto.Email,
+		dto.Password,
 	)
 	if err := row.Scan(&id); err != nil {
 		r.logger.Error(logging.Postgres, logging.Insert, err.Error(), nil)
@@ -45,7 +45,7 @@ func (r *userRepository) Create(ctx context.Context, user *domain.UserDTO) (int,
 	return id, nil
 }
 
-func (r *userRepository) GetByAuthData(ctx context.Context, dto *domain.UserAuthDTO) (*domain.User, error) {
+func (r *userRepository) GetByAuthData(ctx context.Context, dto *domain.AuthenticateUser) (*domain.User, error) {
 	var user domain.User
 	query := "SELECT * FROM users WHERE nickname = $1 and password = $2"
 	stmt, err := r.db.PrepareContext(
@@ -124,8 +124,28 @@ func (r *userRepository) GetByID(ctx context.Context, id int) (*domain.User, err
 	return &user, nil
 }
 
+// ExistsByNickname TODO impl
+func (r *userRepository) ExistsByNickname(ctx context.Context, nickname string) bool {
+	return false
+}
+
+// ExistsByEmail TODO impl
+func (r *userRepository) ExistsByEmail(ctx context.Context, email string) bool {
+	return false
+}
+
 // Update TODO impl
-func (r *userRepository) Update(ctx context.Context, id int, dto *domain.UserDTO) error {
+func (r *userRepository) Update(ctx context.Context, id int, dto *domain.UpdateUserGeneralInfo) error {
+	return nil
+}
+
+// UpdatePassword TODO impl
+func (r *userRepository) UpdatePassword(ctx context.Context, id int, password string) error {
+	return nil
+}
+
+// UpdateEmail TODO impl
+func (r *userRepository) UpdateEmail(ctx context.Context, id int, email string) error {
 	return nil
 }
 
