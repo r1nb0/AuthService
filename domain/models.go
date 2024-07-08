@@ -10,14 +10,14 @@ type User struct {
 }
 
 type UserDTO struct {
-	FirstName string `json:"first_name" validate:"required,min=3"`
-	LastName  string `json:"last_name" validate:"required,min=3"`
-	Nickname  string `json:"nickname" validate:"required,min=3"`
-	Email     string `json:"email" validate:"required,email"`
-	Password  string `json:"password" validate:"required,min=6,max=64"`
+	FirstName string `json:"first_name" binding:"required"`
+	LastName  string `json:"last_name" binding:"required"`
+	Nickname  string `json:"nickname" binding:"required"`
+	Email     string `json:"email" binding:"required,email"`
+	Password  string `json:"password" binding:"required,password"`
 }
 
 type UserAuthDTO struct {
-	Nickname string `json:"nickname" validate:"required,min=3"`
-	Password string `json:"password" validate:"required,min=6,max=64"`
+	Nickname string `json:"nickname" binding:"required,min=3"`
+	Password string `json:"password" binding:"required,min=6,max=64"`
 }

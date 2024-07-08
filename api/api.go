@@ -2,10 +2,13 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/r1nb0/UserService/api/controllers"
 	"github.com/r1nb0/UserService/api/middleware"
+	"github.com/r1nb0/UserService/api/validation"
 	"github.com/r1nb0/UserService/configs"
 	"github.com/r1nb0/UserService/infra"
 	"github.com/r1nb0/UserService/pkg/logging"
@@ -77,9 +80,16 @@ func (serv *AppServer) initSwagger() {
 
 }
 
-// TODO impl
 func (serv *AppServer) initValidators() {
-
+	val, ok := binding.Validator.Engine().(*validator.Validate)
+	if ok {
+		if err := val.RegisterValidation(
+			"password",
+			validation.PasswordValidator,
+		); err != nil {
+			serv.logger.Fatal(logging.Validation, logging.PasswordValidation, err.Error(), nil)
+		}
+	}
 }
 
 func (serv *AppServer) Run() {
