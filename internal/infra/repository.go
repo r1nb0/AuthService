@@ -4,9 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	"github.com/r1nb0/UserService/internal/domain"
 	"github.com/r1nb0/UserService/pkg/logging"
+	"strings"
 )
 
 type userRepository struct {
@@ -124,28 +126,68 @@ func (r *userRepository) GetByID(ctx context.Context, id int) (*domain.User, err
 	return &user, nil
 }
 
-// ExistsByNickname TODO impl
-func (r *userRepository) ExistsByNickname(ctx context.Context, nickname string) bool {
-	return false
-}
-
-// ExistsByEmail TODO impl
-func (r *userRepository) ExistsByEmail(ctx context.Context, email string) bool {
-	return false
-}
-
-// Update TODO impl
 func (r *userRepository) Update(ctx context.Context, id int, dto *domain.UpdateUserGeneralInfo) error {
+	var (
+		placeholders []string
+		args         []interface{}
+		cnt          = 1
+	)
+	if dto.FirstName != "" {
+		placeholders = append(placeholders, fmt.Sprintf("first_name = $%d", cnt))
+		args = append(args, dto.FirstName)
+		cnt++
+	}
+	if dto.LastName != "" {
+		placeholders = append(placeholders, fmt.Sprintf("last_name = $%d", cnt))
+		args = append(args, dto.LastName)
+		cnt++
+	}
+	if dto.Nickname != "" {
+		placeholders = append(placeholders, fmt.Sprintf("nickname = $%d", cnt))
+		args = append(args, dto.Nickname)
+		cnt++
+	}
+	args = append(args, id)
+	query := fmt.Sprintf("UPDATE users SET %s WHERE id = $%d", strings.Join(placeholders, ","), cnt)
+	stmt, err := r.db.PrepareContext(ctx, query)
+	if err != nil {
+		r.logger.Error(logging.Postgres, logging.Update, err.Error(), nil)
+		return err
+	}
+	if _, err := stmt.ExecContext(ctx, args...); err != nil {
+		r.logger.Error(logging.Postgres, logging.Update, err.Error(), nil)
+		return err
+	}
 	return nil
 }
 
-// UpdatePassword TODO impl
 func (r *userRepository) UpdatePassword(ctx context.Context, id int, password string) error {
+	query := "UPDATE users SET password = $1 WHERE id = $2"
+	stmt, err := r.db.PrepareContext(ctx, query)
+	if err != nil {
+		r.logger.Error(logging.Postgres, logging.Update, err.Error(), nil)
+		return err
+	}
+	defer closeStmt(stmt, err)
+	if _, err := stmt.ExecContext(ctx, password, id); err != nil {
+		r.logger.Error(logging.Postgres, logging.Update, err.Error(), nil)
+		return err
+	}
 	return nil
 }
 
-// UpdateEmail TODO impl
 func (r *userRepository) UpdateEmail(ctx context.Context, id int, email string) error {
+	query := "UPDATE users SET email = $1 where id = $2"
+	stmt, err := r.db.PrepareContext(ctx, query)
+	if err != nil {
+		r.logger.Error(logging.Postgres, logging.Update, err.Error(), nil)
+		return err
+	}
+	defer closeStmt(stmt, err)
+	if _, err := stmt.ExecContext(ctx, email, id); err != nil {
+		r.logger.Error(logging.Postgres, logging.Update, err.Error(), nil)
+		return err
+	}
 	return nil
 }
 
