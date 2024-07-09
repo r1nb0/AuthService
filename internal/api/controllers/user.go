@@ -120,7 +120,9 @@ func (c *UserController) Update(ctx *gin.Context) {
 		})
 		return
 	}
-	ctx.Status(http.StatusOK)
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+	})
 }
 
 func (c *UserController) ChangePassword(ctx *gin.Context) {
@@ -131,14 +133,18 @@ func (c *UserController) ChangePassword(ctx *gin.Context) {
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
 	if err := c.uc.UpdatePassword(ctx, authID.(int), req.NewPassword); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
-	ctx.Status(http.StatusOK)
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+	})
 }
 
 func (c *UserController) ChangeEmail(ctx *gin.Context) {
@@ -149,12 +155,16 @@ func (c *UserController) ChangeEmail(ctx *gin.Context) {
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
 	if err := c.uc.UpdateEmail(ctx, authID.(int), req.NewEmail); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"error":   err.Error(),
 		})
+		return
 	}
-	ctx.Status(http.StatusOK)
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": true,
+	})
 }
