@@ -64,12 +64,10 @@ func (s *userService) UpdatePassword(ctx context.Context, id int, password strin
 	return s.repo.UpdatePassword(ctx, id, hashPassword)
 }
 
-// UpdateEmail TODO impl
 func (s *userService) UpdateEmail(ctx context.Context, id int, email string) error {
 	return s.repo.UpdateEmail(ctx, id, email)
 }
 
-// GetByID TODO impl
 func (s *userService) GetByID(ctx context.Context, id int) (*domain.User, error) {
 	return s.repo.GetByID(ctx, id)
 }
