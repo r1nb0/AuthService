@@ -1,10 +1,15 @@
-package configs
+package config
 
 import (
-	"github.com/r1nb0/UserService/constants"
 	"github.com/spf13/viper"
 	"log"
 	"os"
+)
+
+const (
+	cfgPath string = "./configs"
+	cfgName string = "config-prod"
+	cfgType string = "yaml"
 )
 
 type Config struct {
@@ -52,9 +57,9 @@ type JWTConfig struct {
 
 func GetConfig() *Config {
 	v := viper.New()
-	v.AddConfigPath(constants.ConfigPath)
-	v.SetConfigName(constants.ConfigName)
-	v.SetConfigType(constants.ConfigType)
+	v.AddConfigPath(cfgPath)
+	v.SetConfigName(cfgName)
+	v.SetConfigType(cfgType)
 	if err := v.ReadInConfig(); err != nil {
 		log.Fatalf("error of initializing config: %s", err.Error())
 	}

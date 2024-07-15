@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/r1nb0/UserService/constants"
+	"github.com/r1nb0/UserService/internal/constants"
 	"github.com/r1nb0/UserService/internal/domain"
 	"github.com/r1nb0/UserService/internal/usecase"
 	"net/http"

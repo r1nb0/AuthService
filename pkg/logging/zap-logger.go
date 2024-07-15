@@ -2,7 +2,7 @@ package logging
 
 import (
 	"github.com/fluxninja/lumberjack"
-	"github.com/r1nb0/UserService/configs"
+	"github.com/r1nb0/UserService/internal/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
@@ -10,10 +10,10 @@ import (
 
 type zapLogger struct {
 	logger *zap.Logger
-	cfg    *configs.Config
+	cfg    *config.Config
 }
 
-func NewZapLogger(cfg *configs.Config) Logger {
+func NewZapLogger(cfg *config.Config) Logger {
 	logger := &zapLogger{
 		cfg: cfg,
 	}

@@ -5,7 +5,7 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
-	"github.com/r1nb0/UserService/configs"
+	"github.com/r1nb0/UserService/internal/config"
 	"github.com/r1nb0/UserService/internal/domain"
 	"github.com/r1nb0/UserService/internal/utils"
 )
@@ -13,10 +13,10 @@ import (
 type userService struct {
 	repo    domain.UserRepository
 	jwtUtil *utils.JWTUtil
-	cfg     *configs.Config
+	cfg     *config.Config
 }
 
-func NewUserService(repo domain.UserRepository, jwtUtil *utils.JWTUtil, cfg *configs.Config) UserUseCase {
+func NewUserService(repo domain.UserRepository, jwtUtil *utils.JWTUtil, cfg *config.Config) UserUseCase {
 	return &userService{
 		repo:    repo,
 		jwtUtil: jwtUtil,

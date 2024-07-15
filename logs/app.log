@@ -3,3 +3,5 @@
 {"level":"error","timestamp":"2024-07-07T23:13:55.581+0300","msg":"sql: no rows in result set","Category":"Postgres","SubCategory":"Select"}
 {"level":"error","timestamp":"2024-07-07T23:15:42.273+0300","msg":"sql: no rows in result set","Category":"Postgres","SubCategory":"Select"}
 {"level":"error","timestamp":"2024-07-07T23:16:21.505+0300","msg":"sql: no rows in result set","Category":"Postgres","SubCategory":"Select"}
+{"level":"fatal","timestamp":"2024-07-15T19:49:19.541+0300","msg":"dial tcp 127.0.0.1:5432: connect: connection refused","Category":"Postgres","SubCategory":"Startup"}
+{"level":"fatal","timestamp":"2024-07-15T19:50:20.248+0300","msg":"dial tcp 127.0.0.1:5432: connect: connection refused","Category":"Postgres","SubCategory":"Startup"}

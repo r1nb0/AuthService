@@ -6,10 +6,10 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/r1nb0/UserService/configs"
 	"github.com/r1nb0/UserService/internal/api/controllers"
 	"github.com/r1nb0/UserService/internal/api/middleware"
 	"github.com/r1nb0/UserService/internal/api/validation"
+	"github.com/r1nb0/UserService/internal/config"
 	"github.com/r1nb0/UserService/internal/infra"
 	"github.com/r1nb0/UserService/internal/usecase"
 	"github.com/r1nb0/UserService/internal/utils"
@@ -21,13 +21,13 @@ import (
 
 type AppServer struct {
 	httpServer     *http.Server
-	cfg            *configs.Config
+	cfg            *config.Config
 	logger         logging.Logger
 	userController *controllers.UserController
 	authMiddleware *middleware.AuthMiddleware
 }
 
-func NewAppServer(cfg *configs.Config) *AppServer {
+func NewAppServer(cfg *config.Config) *AppServer {
 	logger := logging.NewZapLogger(cfg)
 	db, err := infra.InitPostgres(cfg)
 	if err != nil {

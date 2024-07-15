@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/jmoiron/sqlx"
-	"github.com/r1nb0/UserService/configs"
+	"github.com/r1nb0/UserService/internal/config"
 	"time"
 )
 
-func InitPostgres(cfg *configs.Config) (*sqlx.DB, error) {
+func InitPostgres(cfg *config.Config) (*sqlx.DB, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	dataSourceName := fmt.Sprintf(
